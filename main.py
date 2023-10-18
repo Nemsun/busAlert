@@ -96,13 +96,13 @@ def main():
             f'Good morning!\n\n'
             f'{find_earliest_bus(leave_times)}'
         )
-        # send_message(message)
+        send_message(message)
     if day_end:
         message = (
-            f'Good afternoon!\n\n'
+            f'Good afternoon! I see you\'re done with class. \n\n'
             f'{find_earliest_bus(return_times)}'
         )
-        # send_message(message)
+        send_message(message)
 
 
 if __name__ == "__main__":
