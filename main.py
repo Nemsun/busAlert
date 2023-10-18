@@ -4,8 +4,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from twilio.rest import Client
+from dotenv import load_dotenv
+import os
 import datetime
 
+load_dotenv()
 
 def open_driver():
     # Target URL
@@ -56,10 +59,10 @@ def find_earliest_bus(leave_times):
         return find_earliest_bus(leave_times[1:])
 
 def send_message(message):
-    twilio_account_isd = "ACef8559227c18441d69a0cfc984ec5961"
-    twilio_account_token = "3f3956fef19ac71dac4e36ce7341bc18"
-    twilio_account_phone_num = "+18669395265"
-    my_phone_num = "+18323663919"
+    twilio_account_isd = os.getenv("TWILIO_ACCOUNT_ISD")
+    twilio_account_token = os.getenv("TWILIO_ACCOUNT_TOKEN")
+    twilio_account_phone_num = os.getenv("TWILIO_ACCOUNT_PHONE_NUM")
+    my_phone_num = os.getenv("MY_PHONE_NUM")
 
     client = Client(twilio_account_isd, twilio_account_token)
     client.messages.create(
