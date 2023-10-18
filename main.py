@@ -47,14 +47,13 @@ def available_bus_times(driver, table_rows):
     driver.close()
     return msc_times, holleman_south_times
 
-def find_earliest_bus(time, leave_times):
-    time_obj = datetime.datetime.strptime(time, "%I:%M %p")
-    now = (time_obj + datetime.timedelta(minutes=10)).strftime("%I:%M %p")
-    if now < leave_times[0]:
+def find_earliest_bus(leave_times):
+    now = datetime.datetime.now()
+    time = (now + datetime.timedelta(minutes=10)).strftime("%I:%M %p")
+    if time < leave_times[0]:
         return f'The earliest bus is at {leave_times[0]}'
     else:
-        return find_earliest_bus(time, leave_times[1:])
-
+        return find_earliest_bus(leave_times[1:])
 
 def send_message(message):
     twilio_account_isd = "ACef8559227c18441d69a0cfc984ec5961"
@@ -64,14 +63,14 @@ def send_message(message):
 
     client = Client(twilio_account_isd, twilio_account_token)
     client.messages.create(
-        to=my_phone_num,
-        from_=twilio_account_phone_num,
-        body=message
+        to = my_phone_num,
+        from_ = twilio_account_phone_num,
+        body = message
     )
 
 # Check whether it is time to go to class or go home
 def check_time():
-    now = datetime.datetime.strptime("8:15 PM", "%I:%M %p") # datetime.datetime.now()
+    now = datetime.datetime.now()
     go_to_class = False
     go_home = False
     class_time = datetime.datetime.strptime("06:45 AM", "%I:%M %p")
@@ -89,11 +88,9 @@ def main():
     driver, table_rows = scrape_times()
     return_times, leave_times = available_bus_times(driver, table_rows)
 
-
-    find_earliest_bus("8:15 PM", leave_times)
-    print(find_earliest_bus("8:15 PM", return_times))
+    find_earliest_bus(leave_times)
+    find_earliest_bus(return_times)
     day_start, day_end = check_time()
-
     if day_start:
         message = (
             f'Good morning!\n\n'
