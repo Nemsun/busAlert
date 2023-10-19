@@ -24,12 +24,12 @@ def select_bus_route(driver):
     dropdown = driver.find_element('xpath', '//*[@id="routeSelect"]')
     select = Select(dropdown)
     select.select_by_visible_text("40 Century Tree")
-    return driver
+    return driver, select
 
 def scrape_times():
     # Scrape leave times
     driver = open_driver()
-    driver = select_bus_route(driver)
+    driver, _ = select_bus_route(driver)
     wait = WebDriverWait(driver, 10)
     table_body = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="timeTable"]/tbody')))
     # Getting bus times that arrive at my bus stop (Holleman South)
@@ -52,11 +52,20 @@ def available_bus_times(driver, table_rows):
 
 def find_earliest_bus(leave_times):
     now = datetime.datetime.now()
-    time = (now + datetime.timedelta(minutes=10)).strftime("%I:%M %p")
-    if time < leave_times[0]:
-        return f'The earliest bus is at {leave_times[0]}'
+    current_time = now.strftime("%I:%M %p")
+    current_time_obj = datetime.datetime.strptime(current_time, "%I:%M %p")
+    leave_times_obj = [datetime.datetime.strptime(time, "%I:%M %p") for time in leave_times if time]
+
+    earliest_bus = None
+    for time in leave_times_obj:
+        if time > current_time_obj:
+            earliest_bus = time
+            break
+
+    if earliest_bus:
+        return f'The earliest bus is at {earliest_bus.strftime("%I:%M %p")}'
     else:
-        return find_earliest_bus(leave_times[1:])
+        return "No more buses today."
 
 def send_message(message):
     twilio_account_isd = os.getenv("TWILIO_ACCOUNT_ISD")
