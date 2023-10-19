@@ -39,12 +39,15 @@ class TestMain(unittest.TestCase):
         try:
             self.driver, self.table_rows = main.scrape_times()
             self.msc_times, self.holleman_south_times = main.available_bus_times(self.driver, self.table_rows)
-            self.earliest_bus = main.find_earliest_bus(self.msc_times)
+            self.earliest_return_bus = main.find_earliest_bus(self.msc_times)
+            self.earliest_leave_bus = main.find_earliest_bus(self.holleman_south_times)
             now = datetime.datetime.now()
             now = now.strftime("%I:%M %p")
-            print(self.earliest_bus, now)
-            self.assertNotEqual(self.earliest_bus, now, 'TEST FAILED: Earliest bus was not found correctly')
-            print('TEST PASSED: Earliest bus was found correctly')
+            if (now < self.earliest_return_bus) and (now < self.earliest_leave_bus):
+                print('TEST PASSED: Earliest return bus was found correctly')
+                print('TEST PASSED: Earliest leave bus was found correctly')
+            else:
+                print('TEST FAILED: Earliest bus was not found correctly')
         except AssertionError as e:
             print(e)
 

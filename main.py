@@ -55,13 +55,12 @@ def find_earliest_bus(leave_times):
     current_time = now.strftime("%I:%M %p")
     current_time_obj = datetime.datetime.strptime(current_time, "%I:%M %p")
     leave_times_obj = [datetime.datetime.strptime(time, "%I:%M %p") for time in leave_times if time]
-
+    
     earliest_bus = None
     for time in leave_times_obj:
         if time > current_time_obj:
             earliest_bus = time
             break
-
     if earliest_bus:
         return f'The earliest bus is at {earliest_bus.strftime("%I:%M %p")}'
     else:
