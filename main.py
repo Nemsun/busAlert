@@ -72,12 +72,12 @@ def send_message(message):
     twilio_account_phone_num = os.getenv("TWILIO_ACCOUNT_PHONE_NUM")
     my_phone_num = os.getenv("MY_PHONE_NUM")
     print('Sending message...')
-    # client = Client(twilio_account_isd, twilio_account_token)
-    # client.messages.create(
-    #     to = my_phone_num,
-    #     from_ = twilio_account_phone_num,
-    #     body = message
-    # )
+    client = Client(twilio_account_isd, twilio_account_token)
+    client.messages.create(
+        to = my_phone_num,
+        from_ = twilio_account_phone_num,
+        body = message
+    )
 
 # Check whether it is time to go to class or go home
 def check_time():
