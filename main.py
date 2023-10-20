@@ -71,25 +71,27 @@ def send_message(message):
     twilio_account_token = os.getenv("TWILIO_ACCOUNT_TOKEN")
     twilio_account_phone_num = os.getenv("TWILIO_ACCOUNT_PHONE_NUM")
     my_phone_num = os.getenv("MY_PHONE_NUM")
-
-    client = Client(twilio_account_isd, twilio_account_token)
-    client.messages.create(
-        to = my_phone_num,
-        from_ = twilio_account_phone_num,
-        body = message
-    )
+    print('Sending message...')
+    # client = Client(twilio_account_isd, twilio_account_token)
+    # client.messages.create(
+    #     to = my_phone_num,
+    #     from_ = twilio_account_phone_num,
+    #     body = message
+    # )
 
 # Check whether it is time to go to class or go home
 def check_time():
     now = datetime.datetime.now()
+    current_time = now.strftime("%I:%M %p")
+    current_time_obj = datetime.datetime.strptime(current_time, "%I:%M %p")
     go_to_class = False
     go_home = False
     class_time = datetime.datetime.strptime("06:45 AM", "%I:%M %p")
     home_time = datetime.datetime.strptime("11:10 AM", "%I:%M %p")
 
-    if now.time() == class_time.time():
+    if current_time_obj == class_time:
         go_to_class = True
-    if now.time() == home_time.time():
+    if current_time_obj == home_time:
         go_home = True
 
     return go_to_class, go_home
